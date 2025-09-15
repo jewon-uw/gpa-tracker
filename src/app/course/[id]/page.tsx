@@ -1,7 +1,7 @@
 'use client';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const client = generateClient<Schema>();
 type Category = 'ASSIGNMENT' | 'QUIZ' | 'MIDTERM' | 'FINAL' | 'BONUS' | 'OTHER';
@@ -10,16 +10,21 @@ export default function CoursePage({ params }: { params: { id: string } }) {
     const [course, setCourse] = useState<Schema['Course']['type'] | null>(null);
     const [assessments, setAssessments] = useState<Schema['Assessment']['type'][]>([]);
 
-    async function load() {
+    const load = useCallback(async () => {
         const { data: c } = await client.models.Course.get({ id: params.id });
         setCourse(c ?? null);
         if (c) {
-            const { data: list } = await client.models.Assessment.list({ filter: { courseId: { eq: c.id } } });
+            const { data: list } = await client.models.Assessment.list({
+                filter: { courseId: { eq: c.id } },
+            });
             setAssessments(list);
         }
-    }
-    useEffect(() => { load(); }, []);
+    }, [params.id]);
 
+    useEffect(() => {
+        void load();
+    }, [load]);
+    
     async function addBulk(category: Category, weightsCsv: string) {
         const weights = weightsCsv.split(/[,\s]+/).map(Number).filter(n => !Number.isNaN(n));
         for (let i = 0; i < weights.length; i++) {

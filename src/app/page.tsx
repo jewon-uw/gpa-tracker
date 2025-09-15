@@ -185,7 +185,7 @@ function AddCourseWizard({ onCreated }: { onCreated: () => void }) {
               <p className="text-sm text-gray-300">Add assignments, quizzes, midterms, etc.</p>
             ) : (
               <div className="grid gap-3">
-                {components.map((c, idx) => (
+                {components.map((c) => (
                   <div key={c.id} className="rounded-md border border-white/10 bg-white/5 p-3">
                     {/* Row 1: name + category + remove */}
                     <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -195,11 +195,6 @@ function AddCourseWizard({ onCreated }: { onCreated: () => void }) {
                           placeholder="Component name (e.g., assignments)"
                           value={c.name}
                           onChange={(e) => updateComponent(c.id, 'name', e.target.value)}
-                          onBlur={() => {
-                            // hint category based on name if user didn't change it
-                            if (!c.name) return;
-                            const lower = c.name.toLowerCase();
-                          }}
                         />
                       </div>
 
