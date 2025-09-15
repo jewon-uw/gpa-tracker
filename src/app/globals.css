@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App-wide tokens */
+:root {
+  --bg: #0b0c10;
+  /* tweak later */
+  --fg: #e5e7eb;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
